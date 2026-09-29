@@ -45,6 +45,8 @@ jobs:
           project_id: ${{ vars.NEON_PROJECT_ID }}
           branch_name: preview/pr-${{ github.event.number }}-${{ needs.setup.outputs.branch }}
           api_key: ${{ secrets.NEON_API_KEY }}
+          database: ${{ vars.NEON_DATABASE || 'postgres' }}
+          role: ${{ vars.NEON_ROLE || 'postgres' }}
           expires_at: ${{ env.EXPIRES_AT }}
 
 # The step above creates a new Neon branch.
