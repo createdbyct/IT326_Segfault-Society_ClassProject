@@ -50,7 +50,7 @@ If PowerShell blocks the script, run this once first:
 
 ### Database connection (required)
 
-The first setup run creates `backend/.env` from `backend/.env.example`. Open `backend/.env` and paste in the real `DATABASE_URL` and `DATABASE_URL_POOLED` (get them from Christian / the team chat), then run setup once more to create the tables.
+The first setup run creates `backend/.env` from `backend/.env.example`. Open `backend/.env` and paste in the real `DATABASE_URL` and `DATABASE_URL_POOLED` (Get the database url from NEON), then run setup once more to create the tables.
 
 `.env` holds the database password. **Never commit it**; it's already in `.gitignore`.
 
