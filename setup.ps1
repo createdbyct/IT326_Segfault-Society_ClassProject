@@ -4,9 +4,10 @@ $ErrorActionPreference = "Stop"
 $Root = $PSScriptRoot
 
 # --- Check prerequisites ---
-py -3.14 --version *> $null
-if ($LASTEXITCODE -ne 0) {
-  Write-Host "Python 3.14 not found. Install from https://www.python.org/downloads/" -ForegroundColor Red
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+  Write-Host "uv not found. Install it, then open a new PowerShell window and re-run .\setup.ps1" -ForegroundColor Red
+  Write-Host "  winget install astral-sh.uv"
+  Write-Host "  (or: powershell -ExecutionPolicy ByPass -c `"irm https://astral.sh/uv/install.ps1 | iex`")"
   exit 1
 }
 if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
@@ -15,12 +16,11 @@ if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
 }
 
 # --- Backend ---
-Write-Host "Setting up backend with Python 3.14..."
+Write-Host "Setting up backend (uv installs Python 3.14 automatically if needed)..."
 Set-Location "$Root\backend"
-foreach ($d in @("venv", ".venv")) { if (Test-Path $d) { Remove-Item -Recurse -Force $d } }
-py -3.14 -m venv venv
-.\venv\Scripts\python.exe -m pip install --upgrade pip -q
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
+if (Test-Path venv) { Remove-Item -Recurse -Force venv }   # old pip-based venv
+uv sync
+if ($LASTEXITCODE -ne 0) { exit 1 }
 
 # --- Database config (Neon) ---
 function Test-DbConfigured {
@@ -29,7 +29,7 @@ function Test-DbConfigured {
 
 if ($args -contains "--reset-db" -or -not (Test-DbConfigured)) {
   Write-Host "`nNeon database connection needed." -ForegroundColor Yellow
-  Write-Host "Get the connection string from the team chat (starts with postgresql://)."
+  Write-Host "Get the connection string from Neon (Project -> Connect). It starts with postgresql://"
   while ($true) {
     $DbUrl = Read-Host "Paste DATABASE_URL (or press Enter to skip for now)"
     if ([string]::IsNullOrWhiteSpace($DbUrl)) {
@@ -50,7 +50,7 @@ if ($args -contains "--reset-db" -or -not (Test-DbConfigured)) {
 
 if (Test-DbConfigured) {
   Write-Host "Creating database tables (safe to re-run)..."
-  .\venv\Scripts\python.exe init_db.py
+  uv run python init_db.py
 }
 
 # --- Frontend ---

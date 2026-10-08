@@ -5,10 +5,10 @@ set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 # --- Check prerequisites ---
-if ! command -v python3.14 >/dev/null 2>&1; then
-  echo "❌ Python 3.14 not found."
-  echo "   macOS: brew install python@3.14"
-  echo "   Other: https://www.python.org/downloads/"
+if ! command -v uv >/dev/null 2>&1; then
+  echo "❌ uv not found. Install it, then open a new terminal and re-run ./setup.sh"
+  echo "   macOS:  brew install uv"
+  echo "   Other:  curl -LsSf https://astral.sh/uv/install.sh | sh"
   exit 1
 fi
 if ! command -v npm >/dev/null 2>&1; then
@@ -17,12 +17,10 @@ if ! command -v npm >/dev/null 2>&1; then
 fi
 
 # --- Backend ---
-echo "▶ Setting up backend with Python 3.14..."
+echo "▶ Setting up backend (uv installs Python 3.14 automatically if needed)..."
 cd "$ROOT/backend"
-rm -rf venv .venv                # venvs break when moved, so always rebuild
-python3.14 -m venv venv
-./venv/bin/pip install --upgrade pip -q
-./venv/bin/pip install -r requirements.txt
+rm -rf venv                      # old pip-based venv from before the switch to uv
+uv sync                          # creates .venv and installs the exact versions in uv.lock
 
 # --- Database config (Neon) ---
 needs_url=false
@@ -35,7 +33,7 @@ fi
 if $needs_url; then
   echo ""
   echo "🔑 Neon database connection needed."
-  echo "   Get the connection string from the team chat (starts with postgresql://)."
+  echo "   Get the connection string from Neon (Project → Connect). It starts with postgresql://"
   while true; do
     read -r -p "   Paste DATABASE_URL (or press Enter to skip for now): " DB_URL
     if [ -z "$DB_URL" ]; then
@@ -55,7 +53,7 @@ fi
 
 if grep -q '^DATABASE_URL=postgres' .env && ! grep -q 'USER:PASSWORD' .env; then
   echo "▶ Creating database tables (safe to re-run)..."
-  ./venv/bin/python init_db.py
+  uv run python init_db.py
 fi
 
 # --- Frontend ---
