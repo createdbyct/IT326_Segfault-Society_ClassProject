@@ -1,11 +1,19 @@
 # Python virtual environments & caches
+backend/venv/
+backend/.venv/
+venv/
+.venv/
 __pycache__/
 *.pyc
-venv/
+
+# Secrets (copy backend/.env.example to backend/.env instead)
 .env
 
 # Frontend dependencies & builds
 node_modules/
 dist/
-.DS_Store
 
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
