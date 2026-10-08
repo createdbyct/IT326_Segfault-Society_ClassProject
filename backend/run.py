@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-Convenience launcher for the backend server.
-Equivalent to: uvicorn main:app --app-dir src --reload --port 2626
+Convenience launcher for the backend server (port 2626, auto-reload).
 
-Usage:
-    python3 run.py
+Usage (from backend/):
+    uv run python run.py
 """
 import sys
 
@@ -12,8 +11,8 @@ try:
     import uvicorn
 except ImportError:
     print("uvicorn isn't installed in this Python environment.")
-    print("Make sure your venv is active (or just run ./setup.sh from the project root. Manual fix:")
-    print("    pip install -r requirements.txt")
+    print("Run it through uv so the project's packages are used:")
+    print("    uv run python run.py")
     sys.exit(1)
 
 if __name__ == "__main__":

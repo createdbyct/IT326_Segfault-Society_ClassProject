@@ -2,8 +2,8 @@
 Drop every table and recreate it from the current models.
 Deletes ALL data on the Neon branch in backend/.env.
 
-    ./venv/bin/python reset_db.py          (asks for confirmation)
-    ./venv/bin/python reset_db.py --yes    (no prompt)
+    uv run python reset_db.py          (asks for confirmation)
+    uv run python reset_db.py --yes    (no prompt)
 """
 import sys
 
