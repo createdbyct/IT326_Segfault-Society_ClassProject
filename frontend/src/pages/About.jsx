@@ -43,7 +43,7 @@ export default function About() {
               <div style={{ minWidth: 0 }}>
                 <div className="team-name">{m.name}</div>
                 <div className="rmc-label eyebrow" style={{ marginTop: 4 }}>{m.role}</div>
-                <p style={{ margin: '8px 0 0', fontSize: 15, color: 'var(--text-2)' }}>{m.did}</p>
+                {m.did ? <p style={{ margin: '8px 0 0', fontSize: 15, color: 'var(--text-2)' }}>{m.did}</p> : null}
                 {m.link ? <a href={m.link} target="_blank" rel="noreferrer" style={{ display: 'inline-block', marginTop: 8, font: '700 12px var(--font-mono)', letterSpacing: '0.08em' }}>PROFILE ↗</a> : null}
               </div>
             </div>
