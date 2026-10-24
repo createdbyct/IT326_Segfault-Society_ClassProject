@@ -1,0 +1,132 @@
+/* Rate My Classes — Cutting Mat. Component styles; reads tokens.css custom properties only. */
+.rmc-mat {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-major) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--grid-major) 1.5px, transparent 1.5px),
+    linear-gradient(var(--grid-minor) 1px, transparent 1px), linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+  background-size: calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5), calc(var(--grid-cell) * 5) calc(var(--grid-cell) * 5), var(--grid-cell) var(--grid-cell), var(--grid-cell) var(--grid-cell);
+  color: var(--text);
+}
+.rmc-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+.rmc-label { font-family: var(--font-mono); font-size: 11px; line-height: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2); }
+
+/* Corner angle guides, like the printed corners on a real mat */
+.rmc-guides { position: relative; }
+.rmc-guides::before, .rmc-guides::after { content: ""; position: absolute; width: 16px; height: 16px; pointer-events: none; }
+.rmc-guides::before { left: -1.5px; top: -1.5px; border-left: 3px solid var(--focus); border-top: 3px solid var(--focus); }
+.rmc-guides::after { right: -1.5px; bottom: -1.5px; border-right: 3px solid var(--focus); border-bottom: 3px solid var(--focus); }
+
+/* ---------- Button ---------- */
+.rmc-btn {
+  font-family: var(--font-display); font-size: 17px; line-height: 22px; font-weight: 700; letter-spacing: -0.01em;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); white-space: nowrap;
+  min-height: 44px; padding: 10px 22px; border: 1.5px solid var(--ruler); border-radius: var(--radius-sm);
+  background: var(--ruler); color: var(--on-ruler); cursor: pointer; text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-snap), box-shadow var(--dur-fast) var(--ease-snap);
+}
+.rmc-btn:hover { background: #ffffff; border-color: #ffffff; color: var(--on-ruler); }
+.rmc-btn:active { transform: translateY(1px); }
+.rmc-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.rmc-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+.rmc-btn-outline { background: transparent; color: var(--text); border-color: var(--line); }
+.rmc-btn-outline:hover { background: var(--hover-tint); border-color: var(--text); color: var(--text); }
+.rmc-btn-text { background: transparent; border-color: transparent; color: var(--link); padding-left: 6px; padding-right: 6px; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
+.rmc-btn-text:hover { background: transparent; border-color: transparent; color: var(--link); text-decoration-thickness: 3px; }
+.rmc-btn-sm { font-size: 15px; min-height: 36px; padding: 6px 14px; }
+.rmc-btn-lg { font-size: 19px; min-height: 54px; padding: 14px 30px; }
+
+/* ---------- ScoreRuler ---------- */
+.rmc-ruler { display: grid; gap: 8px; font-family: var(--font-display); color: var(--text); min-width: 220px; }
+.rmc-ruler-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.rmc-ruler-score { font-weight: 700; font-size: 48px; line-height: 1; letter-spacing: -0.03em; }
+.rmc-ruler-of { font-size: 0.42em; color: var(--text-2); letter-spacing: 0; }
+.rmc-ruler-bar {
+  position: relative; height: 30px; border-radius: var(--radius-sm); background-color: var(--ruler);
+}
+/* Ticks: each one is positioned at an exact percentage so they always line up with the labels and the marker. */
+.rmc-ruler { --ruler-inset: 8px; }
+/* Ticks, labels and the marker share an inset track, so 0 and 5 sit inside the ruler instead of on its edge. */
+.rmc-ruler-track { position: absolute; top: 0; bottom: 0; left: var(--ruler-inset); right: var(--ruler-inset); }
+.rmc-ticks { position: absolute; inset: 0; pointer-events: none; }
+.rmc-tk { position: absolute; top: 0; width: 1.5px; margin-left: -0.75px; background: var(--on-ruler); }
+.rmc-tk-major { width: 2px; margin-left: -1px; height: 62%; }
+.rmc-tk-mid { height: 45%; }
+.rmc-tk-minor { height: 32%; }
+
+.rmc-ruler-mark { position: absolute; top: -8px; bottom: -8px; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--blade); transition: left var(--dur-slide) var(--ease-snap); }
+.rmc-ruler-nums { position: relative; height: 14px; font: 700 11px/14px var(--font-mono); color: var(--text-2); }
+.rmc-ruler-nums span { position: absolute; top: 0; transform: translateX(-50%); }
+
+.rmc-ruler-sm .rmc-ruler-score { font-size: 32px; }
+.rmc-ruler-sm .rmc-ruler-bar { height: 20px; }
+.rmc-ruler-sm .rmc-ruler-mark { top: -6px; bottom: -6px; width: 3px; }
+.rmc-ruler-lg .rmc-ruler-score { font-size: 88px; letter-spacing: -0.04em; }
+.rmc-ruler-lg .rmc-ruler-bar { height: 40px; }
+.rmc-ruler-empty .rmc-ruler-bar { background: transparent; border: 1.5px dashed var(--text-2); }
+.rmc-ruler-empty .rmc-ruler-score { font-size: 24px; }
+.rmc-ruler-picks { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.rmc-ruler-picks button {
+  min-height: 44px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: transparent; color: var(--text);
+  font: 700 18px var(--font-display); cursor: pointer;
+}
+.rmc-ruler-picks button[aria-checked="true"] { background: var(--ruler); border-color: var(--ruler); color: var(--on-ruler); }
+.rmc-ruler-picks button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- TickMeter ---------- */
+.rmc-meter { display: grid; grid-template-columns: minmax(64px, 104px) auto minmax(0, 1fr); align-items: center; gap: 12px; }
+.rmc-meter-track { display: flex; gap: 4px; }
+.rmc-tick { width: 26px; height: 18px; border: 1.5px solid var(--line); border-radius: 2px; background: transparent; padding: 0; box-sizing: border-box; }
+.rmc-tick.is-on { background: var(--ruler); border-color: var(--ruler); }
+.rmc-meter-word { font: 500 13px/18px var(--font-mono); color: var(--text-2); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rmc-meter-track.is-input .rmc-tick { width: 40px; height: 44px; cursor: pointer; font: 700 15px var(--font-display); color: var(--text); }
+.rmc-meter-track.is-input .rmc-tick.is-on { color: var(--on-ruler); }
+.rmc-tick:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- Tag ---------- */
+.rmc-tag { display: inline-flex; align-items: center; gap: 6px; font: 700 12px/16px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text); background: none; border: 0; padding: 4px 0; }
+.rmc-tag::before { content: "["; color: var(--link); } .rmc-tag::after { content: "]"; color: var(--link); }
+button.rmc-tag { cursor: pointer; padding: 8px 10px; border: 1.5px solid transparent; border-radius: var(--radius-sm); min-height: 36px; }
+button.rmc-tag:hover { border-color: var(--grid-major); }
+.rmc-tag[aria-pressed="true"] { background: var(--ruler); color: var(--on-ruler); }
+.rmc-tag[aria-pressed="true"]::before, .rmc-tag[aria-pressed="true"]::after { color: var(--on-ruler); }
+.rmc-tag:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.rmc-tag-count { color: var(--text-2); font-weight: 500; }
+.rmc-tag[aria-pressed="true"] .rmc-tag-count { color: var(--on-ruler); }
+
+/* ---------- StatRow ---------- */
+.rmc-stats { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 1.5px solid var(--line); background: var(--panel); margin: 0; }
+.rmc-stat { padding: 10px 14px; border-right: 1px solid var(--grid-major); display: flex; flex-direction: column-reverse; gap: 2px; }
+.rmc-stat:last-child { border-right: 0; }
+.rmc-stat dt { font: 700 10px/14px var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-2); }
+.rmc-stat dd { margin: 0; font: 700 24px/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--text); }
+
+/* ---------- Highlight ---------- */
+.rmc-hl { background: none; color: inherit; font-weight: 700; text-decoration: underline; text-decoration-color: var(--ruler); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+/* ---------- Cards ---------- */
+.rmc-card { background: var(--panel); color: var(--text); border: 1.5px solid var(--line); padding: var(--space-6); font-family: var(--font-display); }
+a.rmc-card { display: block; text-decoration: none; transition: transform var(--dur-fast) var(--ease-snap), box-shadow var(--dur-fast) var(--ease-snap); }
+a.rmc-card:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-lift); }
+a.rmc-card:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.rmc-course { display: grid; gap: var(--space-4); max-width: 560px; }
+a.rmc-card.rmc-course { display: grid; }
+.rmc-course-top { display: flex; justify-content: space-between; gap: 12px; }
+.rmc-course-code { margin: 0; font-weight: 700; font-size: 44px; line-height: 0.95; letter-spacing: -0.04em; }
+.rmc-course-title { margin: 6px 0 0; font-size: 18px; line-height: 24px; font-weight: 500; color: var(--text-2); }
+.rmc-course-quote { margin: 0; font-size: 17px; line-height: 26px; }
+.rmc-tags { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+
+.rmc-review { display: grid; gap: var(--space-3); max-width: 640px; }
+.rmc-review-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rmc-review-score { font: 700 13px/18px var(--font-mono); background: var(--ruler); color: var(--on-ruler); padding: 3px 8px; border-radius: var(--radius-sm); }
+.rmc-review-meta { font: 500 12px/16px var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-2); }
+.rmc-review-text { margin: 0; font-size: 17px; line-height: 26px; }
+.rmc-review-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--grid-major); padding-top: var(--space-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rmc-btn, a.rmc-card, .rmc-ruler-mark { transition: none; }
+}
+
+/* Reading zone: fades the mat grid behind a content column so text on the mat stays legible.
+   Put it on the element that holds running text (e.g. <main>); the grid stays crisp in the margins. */
+.rmc-fade { background-color: color-mix(in srgb, var(--bg) 82%, transparent); box-shadow: 0 0 0 48px color-mix(in srgb, var(--bg) 40%, transparent); }
