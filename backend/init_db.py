@@ -1,6 +1,7 @@
 from src.database import engine
 from sqlmodel import SQLModel
 from src.models.user import User 
+from src.models.review import Review 
 
 print("Streaming table models directly up to Neon Cloud PostgreSQL...")
 SQLModel.metadata.create_all(engine)
