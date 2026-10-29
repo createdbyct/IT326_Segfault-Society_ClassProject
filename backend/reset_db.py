@@ -12,12 +12,15 @@ from sqlmodel import SQLModel
 from src.database import engine
 # Import every model here (same list as init_db.py) so its table gets reset
 from src.models.user import User  # noqa: F401
-from src.models.class_details import ReviewDetails
+from src.models.account import Account  
+from src.models.university import University
+from src.models.review import Review 
+from src.models.review_details import ReviewDetails
 from src.models.review_like import ReviewLike
 from src.models.review_dislike import ReviewDislike
 from src.models.favorite_class import FavoriteClass
-from src.models.account import Account  
-from src.models.university import University
+from src.models.professor import Professor  
+from src.models.class import Class
 
 if "--yes" not in sys.argv:
     host = engine.url.host or "unknown host"
