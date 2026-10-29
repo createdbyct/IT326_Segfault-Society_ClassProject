@@ -3,6 +3,7 @@ from src.models.account import Account
 from src.models.university import University
 from sqlmodel import SQLModel
 from src.models.user import User 
+from src.models.review import Review 
 from src.models.review_details import ReviewDetails
 from src.models.review_like import ReviewLike
 from src.models.review_dislike import ReviewDislike
