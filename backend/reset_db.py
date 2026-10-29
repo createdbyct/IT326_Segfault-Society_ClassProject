@@ -16,6 +16,8 @@ from src.models.class_details import ReviewDetails
 from src.models.review_like import ReviewLike
 from src.models.review_dislike import ReviewDislike
 from src.models.favorite_class import FavoriteClass
+from src.models.account import Account  
+from src.models.university import University
 
 if "--yes" not in sys.argv:
     host = engine.url.host or "unknown host"

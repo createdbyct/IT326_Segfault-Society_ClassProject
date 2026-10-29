@@ -1,4 +1,6 @@
 from src.database import engine
+from src.models.account import Account  
+from src.models.university import University
 from sqlmodel import SQLModel
 from src.models.user import User 
 from src.models.review_details import ReviewDetails
