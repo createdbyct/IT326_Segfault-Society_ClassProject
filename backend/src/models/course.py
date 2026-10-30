@@ -2,8 +2,8 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 
 # Model for a Class at a university
-class Class(SQLModel, table=True):
-    __tablename__ = "Class"
+class Course(SQLModel, table=True):
+    __tablename__ = "Course"
 
     id: Optional[int] = Field(default=None, primary_key=True)
     code: str = Field(index=True, nullable=False)
