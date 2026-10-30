@@ -9,7 +9,7 @@ from src.models.review_like import ReviewLike
 from src.models.review_dislike import ReviewDislike
 from src.models.favorite_class import FavoriteClass
 from src.models.professor import Professor  
-from src.models.class import Class
+from src.models.course import Course
 
 
 print("Streaming table models directly up to Neon Cloud PostgreSQL...")
