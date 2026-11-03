@@ -1,14 +1,19 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
-// During `npm run dev`, requests to /api are forwarded to your backend.
-// Set VITE_DEV_PROXY in .env.local (e.g. http://localhost:8000) to turn this on.
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-  return {
-    plugins: [react()],
-    server: env.VITE_DEV_PROXY
-      ? { proxy: { '/api': { target: env.VITE_DEV_PROXY, changeOrigin: true } } }
-      : undefined,
-  };
-});
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 5173,
+    host: true,
+    allowedHosts: ['classreview.ctstudio.io'],
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:2626',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
+})
