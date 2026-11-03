@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 
 
 class Account(SQLModel, table=True):
-    __tablename__ = "users"
+    __tablename__ = "Accounts"
 
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True, nullable=False)
