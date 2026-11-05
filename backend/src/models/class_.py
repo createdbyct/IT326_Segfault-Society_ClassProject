@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 
 # Model for a Class at a university
@@ -7,8 +7,8 @@ class Class(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     code: str = Field(index=True, nullable=False)
-    university_id: int = Field(default=None, foreign_key="Universities.id")
-    #university: University = Relationship(back_populates="classes")
+    #university_id: int = Field(default=None, foreign_key="Universities.id")
+    university: University = Relationship(back_populates="Classes")
     rating: float = Field(index=True)
-    #review_details: List["ReviewDetails"] = Relationship(back_populates="classes")
-    #favorited_by: List["Account"] = Relationship(back_populates="favorite_classes")
+    reviews: List["ReviewDetails"] = Relationship(back_populates="Classes")
+    favorited_by: List["Account"] = Relationship(back_populates="Classes")

@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 
 
 class Account(SQLModel, table=True):
@@ -14,3 +14,7 @@ class Account(SQLModel, table=True):
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
+    reviews_created: List["Reviews"] = Relationship(back_populates="Accounts")
+    liked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
+    disliked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
+    favorite_classes: List["Classes"] = Relationship(back_populates="Accounts")
