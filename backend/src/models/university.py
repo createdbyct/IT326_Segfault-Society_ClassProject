@@ -8,5 +8,5 @@ class University(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True, nullable=False)
-    classes: List["Classes"] = Relationship(back_populates="Universities")
+    classes: List["Courses"] = Relationship(back_populates="Universities")
     

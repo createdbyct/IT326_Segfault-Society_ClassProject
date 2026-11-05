@@ -17,4 +17,4 @@ class Account(SQLModel, table=True):
     reviews_created: List["Reviews"] = Relationship(back_populates="Accounts")
     liked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
     disliked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
-    favorite_classes: List["Classes"] = Relationship(back_populates="Accounts")
+    favorite_classes: List["Courses"] = Relationship(back_populates="Accounts")

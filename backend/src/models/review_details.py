@@ -7,7 +7,7 @@ class ReviewDetails(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     #class_id: int = Field(default=None, foreign_key="Classes.id")
-    class_reviewed: Class = Relationship(back_populates="ReviewDetails")
+    class_reviewed: Course = Relationship(back_populates="ReviewDetails")
     #created_by_account_id: int = Field(default=None, foreign_key="Accounts.id")
     created_by_account: Account = Relationship(back_populates="ReviewDetails")
     grade_received: str = Field(nullable=False)

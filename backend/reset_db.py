@@ -17,7 +17,7 @@ from src.models.university import University
 from src.models.review import Review 
 from src.models.review_details import ReviewDetails
 from src.models.professor import Professor  
-from src.models.class_ import Class
+from src.models.course import Course
 
 if "--yes" not in sys.argv:
     host = engine.url.host or "unknown host"
