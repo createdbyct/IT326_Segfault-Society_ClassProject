@@ -1,7 +1,12 @@
 from datetime import datetime, timezone
 from typing import Optional
 
+from pwdlib import PasswordHash
+from pwdlib.exceptions import UnknownHashError
 from sqlmodel import Field, SQLModel
+
+
+password_hasher = PasswordHash.recommended()
 
 
 class Account(SQLModel, table=True):
@@ -14,3 +19,20 @@ class Account(SQLModel, table=True):
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
+
+    def updateInformation(self, username: str, password: str) -> bool:
+        username = username.strip()
+
+        if not username or not password.strip():
+            return False
+
+        new_hash = password_hasher.hash(password)
+        self.username = username
+        self.password_hash = new_hash
+        return True
+
+    def validatePassword(self, password: str) -> bool:
+        try:
+            return password_hasher.verify(password, self.password_hash)
+        except (UnknownHashError, ValueError):
+            return False
