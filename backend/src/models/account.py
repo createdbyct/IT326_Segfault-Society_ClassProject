@@ -14,7 +14,7 @@ class Account(SQLModel, table=True):
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
-    reviews_created: List["Reviews"] = Relationship(back_populates="Accounts")
+    reviews_created: List["Reviews"] = Relationship(back_populates="Accounts", cascade_delete=True)
     liked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
     disliked_reviews: List["Reviews"] = Relationship(back_populates="Accounts")
     favorite_classes: List["Courses"] = Relationship(back_populates="Accounts")
