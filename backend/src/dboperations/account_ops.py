@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import Session, SQLModel
 
 from src.database import engine
 from src.dboperations.db_operations import DBOperations

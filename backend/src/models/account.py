@@ -30,7 +30,17 @@ class Account(SQLModel, table=True):
         self.username = username
         self.password_hash = new_hash
         return True
+    def getID(self) -> int | None:
+        return self.id
 
+    def getUsername(self) -> str:
+        return self.username
+
+    def getEmail(self) -> str:
+        return self.email
+
+    def getCreatedAt(self) -> datetime:
+        return self.created_at
     def validatePassword(self, password: str) -> bool:
         try:
             return password_hasher.verify(password, self.password_hash)
