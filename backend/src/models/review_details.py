@@ -18,7 +18,7 @@ class ReviewDetails(SQLModel, table=True):
     #professor_id: int = Field(default=None, foreign_key="Professors.id")
     professor: Professor | None = Relationship(back_populates="ReviewDetails")
 
-    def update(
+    def update(self, 
         Course course = null, 
         Account account = null, 
         string grade_received = null, 
@@ -53,29 +53,29 @@ class ReviewDetails(SQLModel, table=True):
 		
 		return this
 
-    def get_id():
-        return this.id
+    def get_id(self):
+        return self.id
 
-    def get_class_reviewed():
-        return this.class_reviewed
+    def get_class_reviewed(self):
+        return self.class_reviewed
 
-    def get_created_by_account():
-        return this.created_by_account
+    def get_created_by_account(self):
+        return self.created_by_account
 
-    def get_grade_received():
-        return this.grade_received
+    def get_grade_received(self):
+        return self.grade_received
 
-    def get_semester_taken():
-        return this.semester_taken
+    def get_semester_taken(self):
+        return self.semester_taken
 
-    def get_year_teken():
-        return this.year_taken
+    def get_year_teken(self):
+        return self.year_taken
 
-    def get_textbook_required():
-        return this.textbook_required
+    def get_textbook_required(self):
+        return self.textbook_required
 
-    def get_attendance_required():
-        return this.attendance_required
+    def get_attendance_required(self):
+        return self.attendance_required
 
-    def get_professor():
-        return this.professor
+    def get_professor(self):
+        return self.professor

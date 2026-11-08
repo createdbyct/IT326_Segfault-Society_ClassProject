@@ -13,79 +13,79 @@ class Review(SQLModel, table=True):
     liked_by: List["Accounts"] = Relationship(back_populates="Reviews")
     disliked_by: List["Accounts"] = Relationship(back_populates="Reviews")
 
-    def update(
+    def update(self,
         ReviewDetails review_details, 
         double rating,
         string comment
     ):
         if review_details != null:
-            this.review_details = review_details
+            self.review_details = review_details
         if rating != rating:
-            this.rating = rating
+            self.rating = rating
         if comment != null:
-            this.comment = comment
+            self.comment = comment
 
         #save
 		with Session(engine) as session:
-			session.add(this)
+			session.add(self)
 			session.commit()	
 		
 		return this
 
-    def like(Account account):
-        this.liked_by.append(account)
+    def like(self, Account account):
+        self.liked_by.append(account)
 
         #save
 		with Session(engine) as session:
-			session.add(this)
+			session.add(self)
 			session.commit()	
 		
 		return this
 
-    def dislike(Account account):
-        this.disliked_by.append(account)
+    def dislike(self, Account account):
+        self.disliked_by.append(account)
 
         #save
 		with Session(engine) as session:
-			session.add(this)
+			session.add(self)
 			session.commit()	
 		
 		return this
 
-    def remove_like(Account account):
-        this.liked_by.remove(account)
+    def remove_like(self, Account account):
+        self.liked_by.remove(account)
 
         #save
 		with Session(engine) as session:
-			session.add(this)
+			session.add(self)
 			session.commit()	
 		
-		return this
+		return self
 
-    def remove_dislike(Account account):
-        this.disliked_by.remove(account)
+    def remove_dislike(self, Account account):
+        self.disliked_by.remove(account)
 
         #save
 		with Session(engine) as session:
-			session.add(this)
+			session.add(self)
 			session.commit()	
 		
-		return this
+		return self
 
-    def get_id():
-        return this.id
+    def get_id(self):
+        return self.id
 
-    def get_review_details():
-        return this.review_details
+    def get_review_details(self):
+        return self.review_details
 
-    def get_rating():
-        return this.rating
+    def get_rating(self):
+        return self.rating
 
-    def get_comment():
-        return this.comment
+    def get_comment(self):
+        return self.comment
 
-    def get_liked_by():
-        return this.liked_by
+    def get_liked_by(self):
+        return self.liked_by
 
-    def get_disliked_by():
-        return this.disliked_by
+    def get_disliked_by(self):
+        return self.disliked_by

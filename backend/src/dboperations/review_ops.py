@@ -1,23 +1,23 @@
 
 
 class ReviewOps():
-	def create_review(Review r):
+	def create_review(self, Review r):
 		with Session(engine) as session:
 			session.add(r)
 			session.commit()	
 
-	def delete_review(Review r):
+	def delete_review(self, Review r):
 		with Session(engine) as session:
 			session.delete(r)
 			session.commit()	
 
-	def get_review_by_id(int id):
+	def get_review_by_id(self, int id):
 		with Session(engine) as session:
 			statement = select(Review).where(Review.id == id)
 			r = session.exec(statement)
 			return r
 
-	def get_reviews(ReviewDetails review_details = null, double rating = null):
+	def get_reviews(self, ReviewDetails review_details = null, double rating = null):
 		with Session(engine) as session:
 			statement = select(Review)
 
@@ -29,27 +29,27 @@ class ReviewOps():
 			reviews = session.exec(statement)
 			return reviews
 
-	def update_review(Review r, ReviewDetails review_details = null, double rating = null, string comment = null):
+	def update_review(self, Review r, ReviewDetails review_details = null, double rating = null, string comment = null):
 		return r.update(review_details, rating, comment)
 
-	def like_review(Review r, Account account):
+	def like_review(self, Review r, Account account):
 		r.like(account)
 
-	def dislike_review(Review r, Account account):
+	def dislike_review(self, Review r, Account account):
 		r.dislike(account)
 
-	def remove_like_for_review(Review r, Account account):
+	def remove_like_for_review(self, Review r, Account account):
 		r.remove_like(account)
 
-	def remove_dislike_for_review(Review r, Account account):
+	def remove_dislike_for_review(self, Review r, Account account):
 		r.remove_dislike(account)
 
-	def create_review_details(ReviewDetails rd):
+	def create_review_details(self, ReviewDetails rd):
 		with Session(engine) as session:
 			session.add(rd)
 			session.commit()	
 
-	def update_review_details(
+	def update_review_details(self, 
 		ReviewDetails rd, 
 		Course course = null, 
 		Account account = null, 
