@@ -19,7 +19,7 @@ password_hasher = PasswordHash.recommended()
 
 
 class Account(SQLModel, table=True):
-    __tablename__ = "users"
+    __tablename__ = "Accounts"
 
     id: int | None = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True, nullable=False)

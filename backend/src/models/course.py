@@ -8,8 +8,7 @@ if TYPE_CHECKING:
 
 # Model for a Course at a university
 class Course(SQLModel, table=True):
-    # Table info
-    __tablename__ = "Course"
+    __tablename__ = "Courses"
 
     id: int = Field(default=None, primary_key=True)
     code: str = Field(index=True, nullable=False)
