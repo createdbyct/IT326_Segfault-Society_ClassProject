@@ -17,12 +17,33 @@ class ReviewOps():
 			r = session.exec(statement)
 			return r
 
-	def get_reviews(self, ReviewDetails review_details = null, double rating = null):
+	def get_reviews(self, 
+		Course course = null, 
+		string grade_received = null, 
+		string semester_taken = null, 
+		string year_taken = null, 
+		bool textbook_required = null, 
+		bool attendance_required = null, 
+		Professor professor = null, 
+		double rating = null,
+	):
 		with Session(engine) as session:
 			statement = select(Review)
 
-			if review_details != null:
-				statement = statement.where(Review.review_details == review_details)
+			if course != null:
+				statement = statement.where(Review.get_review_details().class_reviewed == course)
+			if grade_received != null:
+				statement = statement.where(Review.get_review_details().grade_received == grade_received)
+			if semester_taken != null:
+				statement = statement.where(Review.get_review_details().semester_taken == semester_taken)
+			if year_taken != null:
+				statement = statement.where(Review.get_review_details().year_taken == year_taken)
+			if textbook_required != null:
+				statement = statement.where(Review.get_review_details().textbook_required == textbook_required)
+			if attendance_required != null:
+				statement = statement.where(Review.get_review_details().attendance_required == attendance_required)
+			if professor != null:
+				statement = statement.where(Review.get_review_details().professor == professor)
 			if rating != null:
 				statement = statement.where(Review.rating == rating)
 
