@@ -12,7 +12,11 @@ class Course(SQLModel, table=True):
 
     id: int = Field(default=None, primary_key=True)
     code: str = Field(index=True, nullable=False)
-    university: University = Relationship(back_populates="courses", cascade_delete=True)
+    university_id: Optional[int] = Field(
+        default=None,
+        foreign_key="universities.id"
+    )
+    university: "University" = Relationship(back_populates="courses")
     rating: float = Field(index=True)
     reviews: List["ReviewDetails"] = Relationship(back_populates="courses")
     favorited_by: List["Account"] = Relationship(back_populates="favorite_courses")
