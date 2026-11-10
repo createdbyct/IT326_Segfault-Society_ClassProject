@@ -1,24 +1,29 @@
-from typing import List
+from typing import List, Optional
 
 from sqlmodel import Session, select
 
 from src.database import engine
 from src.models.university import University
 from src.models.course import Course
-from src.dboperations.db_operations import DBOperations
 
-class UniversityOps(DBOperations):
+class UniversityOps:
 
     # Creates a university
     def createUniversity(self, university: University):
-        self.save(university)
+        with Session(engine) as session:
+            session.add(university)
+            session.commit()
+            session.refresh(university)
 
     # Deletes a university
     def deleteUniversity(self, university: University):
-        self.delete(university)
+        with Session(engine) as session:
+            university = session.merge(university)
+            session.delete(university)
+            session.commit()
 
     # Gets university by its ID
-    def getUniversityById(self, id: int) -> University:
+    def getUniversityById(self, id: int) -> Optional[University]:
         with Session(engine) as session:
             return session.get(University, id)
 
