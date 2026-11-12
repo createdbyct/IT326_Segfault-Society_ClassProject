@@ -191,25 +191,16 @@ class AccountOps:
                 f"{model.__name__} must already be saved."
             )
         return record
-    def replaceFavoriteCourseForAccount(
-        self,
-        account: Account,
-        old_course: Course,
-        new_course: Course,
+    def replaceFavoriteCoursesForAccount(
+        self, account: Account, courses: list[Course]
     ) -> bool:
         with Session(engine) as session:
             saved_account = self._lock_account(session, account.id)
-            saved_old = self._get_saved(session, Course, old_course.id)
-            saved_new = self._get_saved(session, Course, new_course.id)
-
-            if (
-                saved_old not in saved_account.favorite_courses
-                or saved_new in saved_account.favorite_courses
-            ):
-                return False
-
-            saved_account.removeFavoriteCourse(saved_old)
-            saved_account.addFavoriteCourse(saved_new)
+            saved_courses = [
+                self._get_saved(session, Course, course.id)
+                for course in courses
+            ]
+            saved_account.favorite_courses = saved_courses
             session.commit()
             return True
 

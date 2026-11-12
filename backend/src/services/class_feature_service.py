@@ -16,24 +16,17 @@ class ClassFeatureService:
         self.repository = repository
 
     def update_favorite_class(
-        self, account_id: int, old_course_id: int, new_course_id: int
+        self, account_id: int, course_ids: list[int]
     ) -> bool:
-        if old_course_id == new_course_id:
-            raise FeatureError(400, "Choose a different replacement course.")
+        if len(course_ids) != len(set(course_ids)):
+            raise FeatureError(400, "Course IDs must be unique.")
 
         account = self._account(account_id)
-        old_course = self._course(old_course_id)
-        new_course = self._course(new_course_id)
+        courses = [self._course(course_id) for course_id in course_ids]
 
-        replaced = self.repository.accounts.replaceFavoriteCourseForAccount(
-            account, old_course, new_course
+        return self.repository.accounts.replaceFavoriteCoursesForAccount(
+            account, courses
         )
-        if not replaced:
-            raise FeatureError(
-                409,
-                "The old course must be saved and the new course must be absent from favorites.",
-            )
-        return True
 
     def remove_course_from_favorite_list(
         self, account_id: int, course_id: int

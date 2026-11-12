@@ -8,7 +8,7 @@ from src.services.class_feature_service import ClassFeatureService, FeatureError
 
 
 class FavoriteReplacement(BaseModel):
-    new_course_id: PositiveInt
+    course_ids: list[PositiveInt]
 
 
 class ClassUpdate(BaseModel):
@@ -71,7 +71,7 @@ class ClassFeatureController:
         manager = [Depends(require_course_manager)]
 
         self.router.add_api_route(
-            "/accounts/{account_id}/favorites/{course_id}",
+            "/accounts/{account_id}/favorites",
             self.update_favorite_class,
             methods=["PUT"],
             dependencies=owner,
@@ -122,13 +122,10 @@ class ClassFeatureController:
     def update_favorite_class(
         self,
         account_id: PositiveInt,
-        course_id: PositiveInt,
         body: FavoriteReplacement,
         service: Service,
     ) -> bool:
-        return service.update_favorite_class(
-            account_id, course_id, body.new_course_id
-        )
+        return service.update_favorite_class(account_id, body.course_ids)
 
     def remove_course_from_favorite_list(
         self,
