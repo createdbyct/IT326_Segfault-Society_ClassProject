@@ -167,11 +167,8 @@ class AccountOps:
         change: Callable[[Account, Related], None],
     ) -> None:
         with Session(engine) as session:
-            saved_account = self._get_saved(
-                session,
-                Account,
-                account.id,
-            )
+            saved_account = self._lock_account(session, account.id)
+
             related = self._get_saved(
                 session,
                 model,
@@ -193,5 +190,24 @@ class AccountOps:
             raise ValueError(
                 f"{model.__name__} must already be saved."
             )
-
         return record
+    def replaceFavoriteCoursesForAccount(
+        self, account: Account, courses: list[Course]
+    ) -> bool:
+        with Session(engine) as session:
+            saved_account = self._lock_account(session, account.id)
+            saved_courses = [
+                self._get_saved(session, Course, course.id)
+                for course in courses
+            ]
+            saved_account.favorite_courses = saved_courses
+            session.commit()
+            return True
+
+    @staticmethod
+    def _lock_account(session: Session, account_id: int | None) -> Account:
+        statement = select(Account).where(Account.id == account_id).with_for_update()
+        account = session.exec(statement).first()
+        if account is None:
+            raise ValueError("Account must already be saved.")
+        return account
