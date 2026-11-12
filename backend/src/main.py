@@ -3,8 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
 from src.database import get_session
 from src.models.account import Account
+from src.controllers.class_feature_controller import register_class_feature_routes
 
 app = FastAPI(title="University Project API", version="1.0.0")
+
+register_class_feature_routes(app)
 
 app.add_middleware(
     CORSMiddleware,
