@@ -1,10 +1,12 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import List, TYPE_CHECKING
 from src.models.university import University
+from src.models.link_tables import FavoriteCourse
 
 if TYPE_CHECKING:
     from src.models.review_details import ReviewDetails
     from src.models.account import Account
+
 
 # Model for a Course at a university
 class Course(SQLModel, table=True):
@@ -12,14 +14,11 @@ class Course(SQLModel, table=True):
 
     id: int = Field(default=None, primary_key=True)
     code: str = Field(index=True, nullable=False)
-    university_id: Optional[int] = Field(
-        default=None,
-        foreign_key="universities.id"
-    )
+    university_id: int = Field(default=None, foreign_key="Universities.id")
     university: "University" = Relationship(back_populates="courses")
-    rating: float = Field(index=True)
-    reviews: List["ReviewDetails"] = Relationship(back_populates="courses")
-    favorited_by: List["Account"] = Relationship(back_populates="favorite_courses")
+    rating: float = Field(default=0.0, index=True)
+    reviews: List["ReviewDetails"] = Relationship(back_populates="class_reviewed")
+    favorited_by: List["Account"] = Relationship(back_populates="favorite_courses", link_model=FavoriteCourse)
 
     # Constructor
 
