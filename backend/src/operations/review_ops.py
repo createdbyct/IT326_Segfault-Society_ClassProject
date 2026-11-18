@@ -1,10 +1,31 @@
-
+from src.database import engine
+from sqlmodel import *
+from src.models.review import Review
+from src.models.review_details import ReviewDetails
+from src.models.professor import Professor
+from src.models.course import Course
+from src.models.account import Account
 
 class ReviewOps():
-	def create_review(self, r: "Review"):
+	def create_review(self, 
+		course: Course, 
+		account: Account,
+		grade_received: str, 
+		semester_taken: str, 
+		year_taken: str, 
+		textbook_required: bool, 
+		attendance_required: bool, 
+		professor: Professor, 
+		rating: float,
+		comment: str
+	):
+		review_details = ReviewDetails(class_reviewed=course, class_id=course.id, created_by_account=account, created_by_account_id=account.id, grade_received=grade_received, year_taken=year_taken, semester_taken=semester_taken,textbook_required=textbook_required, attendance_required=attendance_required, professor=professor, professor_id=professor.id)
+		review = Review(review_details=review_details, rating=rating, comment=comment)
 		with Session(engine) as session:
-			session.add(r)
+			session.add(review)
 			session.commit()	
+			session.refresh(review)
+			return review.id
 
 	def delete_review(self, r: "Review"):
 		with Session(engine) as session:
@@ -64,11 +85,6 @@ class ReviewOps():
 
 	def remove_dislike_for_review(self, r: "Review", account: "Account"):
 		r.remove_dislike(account)
-
-	def create_review_details(self, rd: "ReviewDetails"):
-		with Session(engine) as session:
-			session.add(rd)
-			session.commit()	
 
 	def update_review_details(self, 
 		rd: "ReviewDetails", 

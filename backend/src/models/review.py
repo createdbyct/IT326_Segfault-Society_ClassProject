@@ -10,7 +10,7 @@ class Review(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True) 
     rating: float = Field(nullable=False)
     comment: str = Field(nullable=False)
-    review_details_id: int = Field(default=None, foreign_key="ReviewDetails.id")
+    review_details_id: int = Field(foreign_key="ReviewDetails.id")
     review_details: ReviewDetails = Relationship(back_populates="review")
     liked_by: List["Account"] = Relationship(back_populates="liked_reviews", link_model=ReviewLike)
     disliked_by: List["Account"] = Relationship(back_populates="disliked_reviews", link_model=ReviewDislike)
