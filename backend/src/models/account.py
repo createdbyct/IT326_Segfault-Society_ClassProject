@@ -5,9 +5,9 @@ from pwdlib import PasswordHash
 from pwdlib.exceptions import UnknownHashError
 from sqlmodel import Field, Relationship, SQLModel
 
-from src.models.favorite_class import FavoriteClass
-from src.models.review_dislike import ReviewDislike
-from src.models.review_like import ReviewLike
+from src.models.link_tables import ReviewDislike
+from src.models.link_tables import ReviewLike
+from src.models.link_tables import FavoriteCourse
 
 if TYPE_CHECKING:
     from src.models.course import Course
@@ -31,7 +31,7 @@ class Account(SQLModel, table=True):
 
     favorite_courses: list["Course"] = Relationship(
         back_populates="favorited_by",
-        link_model=FavoriteClass,
+        link_model=FavoriteCourse,
     )
 
     liked_reviews: list["Review"] = Relationship(
@@ -120,6 +120,9 @@ class Account(SQLModel, table=True):
 
     def getCreatedAt(self) -> datetime:
         return self.created_at
+
+    def getFavoriteCourses(self):
+        return self.favorite_courses
 
     def validatePassword(self, password: str) -> bool:
         try:
