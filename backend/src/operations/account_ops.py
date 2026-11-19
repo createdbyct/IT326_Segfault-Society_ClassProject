@@ -159,6 +159,12 @@ class AccountOps:
             Account.removeReviewCreated,
         )
 
+    def getFavoriteCourses(
+        self,
+        account: Account
+    ) -> list[Course]:
+        return account.getFavoriteCourses()
+
     def _change_relationship(
         self,
         account: Account,
