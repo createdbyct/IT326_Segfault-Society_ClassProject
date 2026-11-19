@@ -8,6 +8,7 @@ class University(SQLModel, table=True):
     name: str = Field(index=True, unique=True, nullable=False)
 
     courses: List["Course"] = Relationship(back_populates="university")
+    professors: List["Professor"] = Relationship(back_populates="university")
 
     # Updates the university name
     def update_name(self, name: str):

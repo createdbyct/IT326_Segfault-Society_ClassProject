@@ -2,56 +2,59 @@ from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
 from typing import Optional
 
+from src.models.professor import Professor
+
 class ReviewDetails(SQLModel, table=True):
     __tablename__ = "ReviewDetails"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    #class_id: int = Field(default=None, foreign_key="Classes.id")
-    class_reviewed: Course = Relationship(back_populates="ReviewDetails")
-    #created_by_account_id: int = Field(default=None, foreign_key="Accounts.id")
-    created_by_account: Account = Relationship(back_populates="ReviewDetails")
+    review: Review = Relationship(back_populates="review_details")
+    class_id: int = Field(default=None, foreign_key="Courses.id")
+    class_reviewed: Course = Relationship(back_populates="reviews")
+    created_by_account_id: int = Field(default=None, foreign_key="Accounts.id")
+    created_by_account: Account = Relationship(back_populates="review_details_created")
     grade_received: str = Field(nullable=False)
     semester_taken: str = Field(nullable=False)
     year_taken: str = Field(nullable=False)
     textbook_required: bool = Field(nullable=False)
     attendance_required: bool = Field(nullable=False)
-    #professor_id: int = Field(default=None, foreign_key="Professors.id")
-    professor: Professor | None = Relationship(back_populates="ReviewDetails")
+    professor_id: int = Field(default=None, foreign_key="Professors.id")
+    professor: Professor | None = Relationship(back_populates="review_details")
 
     def update(self, 
-        Course course = null, 
-        Account account = null, 
-        string grade_received = null, 
-        string semester_taken = null, 
-        string year_taken = null, 
-        bool textbook_required = null, 
-        bool attendance_required = null, 
-        Professor professor = null
+        course: "Course" = None, 
+        account: "Account" = None, 
+        grade_received: str = None, 
+        semester_taken: str = None, 
+        year_taken: str = None, 
+        textbook_required: bool = None, 
+        attendance_required: bool = None, 
+        professor: "Professor" = None
     ):
         #update the attributes to the ones provided by the user
-		if course != null:
-			this.class_reviewed = course
-		if account != null:
-			this.created_by_account = account
-		if gradeReceived != null:
-			this.grade_received = grade_received
-		if semesterTaken != null:
-			this.semester_taken = semester_taken
-		if yearTaken != null:
-			this.year_taken = year_taken
-		if textbookRequired != null:
-			this.textbook_required = textbook_required
-		if attendanceRequired != null:
-			this.attendance_required = attendance_required
-		if professor != null:
-			this.professor = professor
+        if course != None:
+            this.class_reviewed = course
+        if account != None:
+            this.created_by_account = account
+        if gradeReceived != None:
+            this.grade_received = grade_received
+        if semesterTaken != None:
+            this.semester_taken = semester_taken
+        if yearTaken != None:
+            this.year_taken = year_taken
+        if textbookRequired != None:
+            this.textbook_required = textbook_required
+        if attendanceRequired != None:
+            this.attendance_required = attendance_required
+        if professor != None:
+            this.professor = professor
 	
 		#save
-		with Session(engine) as session:
-			session.add(this)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(this)
+            session.commit()	
 		
-		return this
+        return this
 
     def get_id(self):
         return self.id

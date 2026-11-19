@@ -1,76 +1,77 @@
-from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional
+from typing import Optional, List
+from sqlmodel import Field, Relationship, SQLModel
 
+from src.models.link_tables import ReviewDislike
+from src.models.link_tables import ReviewLike
 
 class Review(SQLModel, table=True):
     __tablename__ = "Reviews"
 
-    id: int = Field(default=None, primary_key=True)
-    rating: double = Field(nullable=False)
+    id: Optional[int] = Field(default=None, primary_key=True) 
+    rating: float = Field(nullable=False)
     comment: str = Field(nullable=False)
-    #review_details_id: int = Field(default=None, foreign_key="ReviewDetails.id")
-    review_details: ReviewDetails = Relationship(back_populates="Reviews", cascade_delete=True)
-    liked_by: List["Accounts"] = Relationship(back_populates="Reviews")
-    disliked_by: List["Accounts"] = Relationship(back_populates="Reviews")
+    review_details_id: int = Field(foreign_key="ReviewDetails.id")
+    review_details: ReviewDetails = Relationship(back_populates="review")
+    liked_by: List["Account"] = Relationship(back_populates="liked_reviews", link_model=ReviewLike)
+    disliked_by: List["Account"] = Relationship(back_populates="disliked_reviews", link_model=ReviewDislike)
 
-    def update(self,
-        ReviewDetails review_details, 
-        double rating,
-        string comment
+    def update(self, 
+        review_details: "ReviewDetails", 
+        rating: float,
+        comment: str
     ):
-        if review_details != null:
+        if review_details != None:
             self.review_details = review_details
         if rating != rating:
             self.rating = rating
-        if comment != null:
+        if comment != None:
             self.comment = comment
-
         #save
-		with Session(engine) as session:
-			session.add(self)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()	
 		
-		return this
+        return this
 
-    def like(self, Account account):
+    def like(self, account: "Account"):
         self.liked_by.append(account)
 
         #save
-		with Session(engine) as session:
-			session.add(self)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()	
 		
-		return this
+        return this
 
-    def dislike(self, Account account):
+    def dislike(self, account: "Account"):
         self.disliked_by.append(account)
 
         #save
-		with Session(engine) as session:
-			session.add(self)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()	
 		
-		return this
+        return this
 
-    def remove_like(self, Account account):
+    def remove_like(self, account: "Account"):
         self.liked_by.remove(account)
 
         #save
-		with Session(engine) as session:
-			session.add(self)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()	
 		
-		return self
+        return self
 
-    def remove_dislike(self, Account account):
+    def remove_dislike(self, account: "Account"):
         self.disliked_by.remove(account)
 
         #save
-		with Session(engine) as session:
-			session.add(self)
-			session.commit()	
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()	
 		
-		return self
+        return self
 
     def get_id(self):
         return self.id
@@ -88,4 +89,4 @@ class Review(SQLModel, table=True):
         return self.liked_by
 
     def get_disliked_by(self):
-        return self.disliked_by
+        return self.disliked_by 

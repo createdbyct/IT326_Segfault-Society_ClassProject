@@ -7,6 +7,6 @@ class Professor(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, nullable=False)
-    #university_id: int = Field(default=None, foreign_key="Universities.id")
-    university: University = Relationship(back_populates="Professors")
-    review_details: List["ReviewDetails"] = Relationship(back_populates="Professors")
+    university_id: int = Field(default=None, foreign_key="Universities.id")
+    university: University = Relationship(back_populates="professors")
+    review_details: list["ReviewDetails"] = Relationship(back_populates="professor")
