@@ -1,7 +1,8 @@
 from collections.abc import Callable
 from typing import TypeVar
+import bcrypt
 
-from sqlmodel import Session, SQLModel, select
+from sqlmodel import Session, SQLModel, select, or_, col
 
 from src.database import engine
 from src.models.account import Account
@@ -13,12 +14,35 @@ Related = TypeVar("Related", bound=SQLModel)
 
 
 class AccountOps:
-    def createAccount(self, account: Account) -> None:
+    def createAccount(self, username: str, password: str, email: str) -> bool:
+        # Prepare statement for searching for the username and email in the existing accounts
+        statement = select(Account).where(
+            or_(
+                col(Account.username) == username,
+                col(Account.email) == email,
+            )
+        )
+
         with Session(engine, expire_on_commit=False) as session:
+            # Return false if any matches were found for provided username and password
+            existing_account = session.exec(statement).first()
+            if existing_account:
+                return False
+
+            # Create new account object while generating password hash
+            salt = bcrypt.gensalt()
+            account = Account(username = username,
+                            email = email,
+                            password_hash = bcrypt.hashpw(password, salt)
+                            )
+            
+            # Add the newly created account to the database
             session.add(account)
             session.commit()
 
-    def deleteAccount(self, account: Account) -> None:
+        return True
+
+    def deleteAccount(self, username: str, password: str) -> None:
         with Session(engine) as session:
             saved_account = self._get_saved(
                 session,
