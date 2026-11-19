@@ -32,14 +32,14 @@ class AccountOps:
             # Create new account object while generating password hash
             salt = bcrypt.gensalt()
             account = Account(username = username,
-                            email = email,
-                            password_hash = bcrypt.hashpw(password, salt)
-                            )
+                              email = email,
+                              password_hash = bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
+                              )
             
             # Add the newly created account to the database
             session.add(account)
             session.commit()
-
+            
         return True
 
     def deleteAccount(self, username: str, password: str) -> None:
