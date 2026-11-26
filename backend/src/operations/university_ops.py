@@ -28,12 +28,12 @@ class UniversityOps:
             return session.get(University, id)
 
     # Gets universities by name
-    def getUniversitiesByName(self, name: str) -> List[University]:
+    def getUniversityByName(self, name: str) -> University:
         with Session(engine) as session:
             statement = select(University).where(
-                University.name.contains(name)
+                University.name==name
             )
-            return session.exec(statement).all()
+            return session.exec(statement).first()
 
     # Updates a university's name
     def updateUniversity(self, university: University, name: str) -> University:

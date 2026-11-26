@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
+from sqlmodel import *
+from src.database import engine
 
 from pwdlib import PasswordHash
 from pwdlib.exceptions import UnknownHashError
@@ -67,32 +69,83 @@ class Account(SQLModel, table=True):
         return self
 
     def addFavoriteCourse(self, course: "Course") -> None:
-        if course not in self.favorite_courses:
-            self.favorite_courses.append(course)
+        #save
+        with Session(engine) as session:
+            statement = select(Account).where(Account.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            res.favorite_courses.append(course)
+            session.add(res)
+            session.commit()	
+        #if course not in self.favorite_courses:
+        #    self.favorite_courses.append(course)
 
     def removeFavoriteCourse(self, course: "Course") -> None:
-        if course in self.favorite_courses:
-            self.favorite_courses.remove(course)
+        #save
+        with Session(engine) as session:
+            if course in res.favorite_courses:
+                statement = select(FavoriteCourse).where(FavoriteCourse.course_id==course.id and FavoriteCourse.account_id==self.id)
+                results = session.exec(statement)
+                res = results.one()
+                session.delete(res)
+                session.commit()
+        return self
+        #if course in self.favorite_courses:
+        #    self.favorite_courses.remove(course)
 
     def likeReview(self, review: "Review") -> None:
-        self.removeDislikedReview(review)
-
-        if review not in self.liked_reviews:
-            self.liked_reviews.append(review)
+        #save
+        with Session(engine) as session:
+            statement = select(Account).where(Account.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            if review in res.disliked_reviews:
+                self.disliked_reviews.remove(account)
+            res.liked_reviews.append(review)
+            session.add(res)
+            session.commit()	
+        #self.removeDislikedReview(review)
+        #if review not in self.liked_reviews:
+        #    self.liked_reviews.append(review)
 
     def removeLikedReview(self, review: "Review") -> None:
-        if review in self.liked_reviews:
-            self.liked_reviews.remove(review)
+        #save
+        with Session(engine) as session:
+            statement = select(ReviewLike).where(ReviewLike.review_id==review.id and ReviewLike.account_id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            session.delete(res)
+            session.commit()
+        return self
+        #if review in self.liked_reviews:
+        #    self.liked_reviews.remove(review)
 
     def dislikeReview(self, review: "Review") -> None:
-        self.removeLikedReview(review)
-
-        if review not in self.disliked_reviews:
-            self.disliked_reviews.append(review)
+        #save
+        with Session(engine) as session:
+            statement = select(Account).where(Account.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            if review in res.liked_reviews:
+                self.liked_reviews.remove(account)
+            res.disliked_reviews.append(review)
+            session.add(res)
+            session.commit()	
+        #self.removeLikedReview(review)
+        #if review not in self.disliked_reviews:
+        #    self.disliked_reviews.append(review)
 
     def removeDislikedReview(self, review: "Review") -> None:
-        if review in self.disliked_reviews:
-            self.disliked_reviews.remove(review)
+        #save
+        with Session(engine) as session:
+            statement = select(ReviewDislike).where(ReviewDislike.review_id==review.id and ReviewDislike.account_id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            session.delete(res)
+            session.commit()
+        return self
+        #if review in self.disliked_reviews:
+        #    self.disliked_reviews.remove(review)
 
     def addReviewCreated(self, review: "Review") -> None:
         details = review.review_details
@@ -122,7 +175,12 @@ class Account(SQLModel, table=True):
         return self.created_at
 
     def getFavoriteCourses(self):
-        return self.favorite_courses
+        with Session(engine) as session:
+            statement = select(Account).where(Account.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            return res.favorite_courses
+        #return self.favorite_courses
 
     def validatePassword(self, password: str) -> bool:
         try:

@@ -4,6 +4,7 @@ from src.database import engine
 from src.models.course import Course
 from src.models.university import University
 from src.models.review_details import ReviewDetails
+from src.models.review import Review
 from src.models.account import Account
 
 # Operations for a Course at a university
@@ -13,6 +14,7 @@ class CourseOps:
             session.add(course)
             session.commit()
             session.refresh(course)
+            return course.id
 
     def delete_course(self, course: Course) -> None:
         with Session(engine) as session:
@@ -73,3 +75,17 @@ class CourseOps:
             session.add(course)
             course.remove_favorited_by(account)
             session.commit()
+
+    def update_course_rating_based_on_reviews(self, course: Course):
+        course_id = course.id
+        rating = 0.0
+        with Session(engine) as session:
+            #get all reviews for this course
+            statement = select(Review).join(ReviewDetails).join(Course).where(Course.id==course_id)
+            results = session.exec(statement)
+            reviews = results.all()
+            for r in reviews:
+                rating += r.rating
+            rating = rating / len(reviews)
+        course.update_rating(rating)
+            

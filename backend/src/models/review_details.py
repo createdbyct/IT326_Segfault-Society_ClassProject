@@ -1,4 +1,5 @@
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import *
+from src.database import engine
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -33,37 +34,45 @@ class ReviewDetails(SQLModel, table=True):
     ):
         #update the attributes to the ones provided by the user
         if course != None:
-            this.class_reviewed = course
+            self.class_reviewed = course
         if account != None:
-            this.created_by_account = account
-        if gradeReceived != None:
-            this.grade_received = grade_received
-        if semesterTaken != None:
-            this.semester_taken = semester_taken
-        if yearTaken != None:
-            this.year_taken = year_taken
-        if textbookRequired != None:
-            this.textbook_required = textbook_required
-        if attendanceRequired != None:
-            this.attendance_required = attendance_required
+            self.created_by_account = account
+        if grade_received != None:
+            self.grade_received = grade_received
+        if semester_taken != None:
+            self.semester_taken = semester_taken
+        if year_taken != None:
+            self.year_taken = year_taken
+        if textbook_required != None:
+            self.textbook_required = textbook_required
+        if attendance_required != None:
+            self.attendance_required = attendance_required
         if professor != None:
-            this.professor = professor
+            self.professor = professor
 	
 		#save
         with Session(engine) as session:
-            session.add(this)
+            session.add(self)
             session.commit()	
 		
-        return this
+        return self
 
     def get_id(self):
         return self.id
 
     def get_class_reviewed(self):
-        return self.class_reviewed
+        with Session(engine) as session:
+            statement = select(ReviewDetails).where(ReviewDetails.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            return res.class_reviewed
 
     def get_created_by_account(self):
-        return self.created_by_account
+        with Session(engine) as session:
+            statement = select(ReviewDetails).where(ReviewDetails.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            return res.created_by_account
 
     def get_grade_received(self):
         return self.grade_received
@@ -81,4 +90,8 @@ class ReviewDetails(SQLModel, table=True):
         return self.attendance_required
 
     def get_professor(self):
-        return self.professor
+        with Session(engine) as session:
+            statement = select(ReviewDetails).where(ReviewDetails.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            return res.professor
