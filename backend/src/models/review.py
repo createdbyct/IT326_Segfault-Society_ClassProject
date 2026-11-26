@@ -54,7 +54,10 @@ class Review(SQLModel, table=True):
             statement = select(Review).where(Review.id==self.id)
             results = session.exec(statement)
             res = results.one()
-            res.liked_by.append(account)
+            if account in res.disliked_by:
+                self.disliked_by.remove(account)
+            if account not in res.liked_by:
+                res.liked_by.append(account)
             session.add(res)
             session.commit()	
 		
@@ -66,10 +69,12 @@ class Review(SQLModel, table=True):
             statement = select(Review).where(Review.id==self.id)
             results = session.exec(statement)
             res = results.one()
-            res.disliked_by.append(account)
+            if account in res.liked_by:
+                self.liked_by.remove(account)
+            if account not in res.disliked_by:
+                res.disliked_by.append(account)
             session.add(res)
             session.commit()	
-		
         return self
 
     def remove_like(self, account: "Account"):
@@ -80,7 +85,6 @@ class Review(SQLModel, table=True):
             res = results.one()
             session.delete(res)
             session.commit()
-		
         return self
 
     def remove_dislike(self, account: "Account"):
@@ -91,7 +95,6 @@ class Review(SQLModel, table=True):
             res = results.one()
             session.delete(res)
             session.commit()
-		
         return self
 
     def get_id(self):
@@ -120,17 +123,16 @@ class Review(SQLModel, table=True):
 
     def get_grade_received(self):
         with Session(engine) as session:
-                statement = select(Review).where(Review.id==self.id)
-                results = session.exec(statement)
-                res = results.one()
-                return res.review_details.grade_received
+            statement = select(Review).where(Review.id==self.id)
+            res = results.one()
+            return res.review_details.grade_received
 
     def get_semester_taken(self):
         with Session(engine) as session:
-                statement = select(Review).where(Review.id==self.id)
-                results = session.exec(statement)
-                res = results.one()
-                return res.review_details.semester_taken
+            statement = select(Review).where(Review.id==self.id)
+            results = session.exec(statement)
+            res = results.one()
+            return res.review_details.semester_taken
 
     def get_year_teken(self):
         with Session(engine) as session:

@@ -66,9 +66,6 @@ def test_create_review():
 		session.delete(p)
 		session.commit()
 
-	#end test
-	assert True
-
 def test_delete_review():
 	#setup
 	#create needed rows in db
@@ -117,9 +114,6 @@ def test_delete_review():
 		session.delete(p)
 		session.commit()
 
-	#end test
-	assert True
-
 def test_get_review_by_id():
 	#setup
 	#create needed rows in db
@@ -165,9 +159,6 @@ def test_get_review_by_id():
 		session.delete(test_review_details)
 		session.delete(test_review)
 		session.commit()
-
-	#end test
-	assert True
 
 def test_get_reviews_no_filter():
 	#setup
@@ -240,9 +231,6 @@ def test_get_reviews_no_filter():
 		session.delete(test_review2)
 		session.commit()
 
-	#end test
-	assert True
-
 def test_get_reviews_with_filter():
 	#setup
 	#create needed rows in db
@@ -309,9 +297,6 @@ def test_get_reviews_with_filter():
 		session.delete(test_review2)
 		session.commit()
 
-	#end test
-	assert True
-
 def test_update_review():
 	#setup
 	#create needed rows in db
@@ -369,9 +354,6 @@ def test_update_review():
 		session.delete(test_review_details)
 		session.delete(test_review)
 		session.commit()
-
-	#end test
-	assert True
 
 def test_like_review():
 	#setup
@@ -435,8 +417,71 @@ def test_like_review():
 		session.delete(test_account)
 		session.commit()
 
-	#end test
-	assert True
+def test_like_review_for_disliked_review():
+	#setup
+	#create needed rows in db
+	uni = University(name="test university")
+	a = Account(username="test", email="test email", password_hash="test")
+	test_account = Account(username="test_like_account", email="test_like email", password_hash="test")
+	c = Course(code="IT326", university=uni, rating=1.0)
+	p = Professor(name="test", university=uni)
+	test_review_details = ReviewDetails(class_reviewed=c, created_by_account=a, grade_received="A", semester_taken="Fall", year_taken="2026", textbook_required=True, attendance_required=True, professor=p)
+	test_review = Review(review_details=test_review_details, rating=1.0, comment="testing like_review method")
+	with Session(engine) as session:
+		session.add(uni)
+		session.add(a)
+		session.add(c)
+		session.add(p)
+		session.add(test_review_details)
+		session.add(test_review)
+		session.add(test_account)
+		session.commit()
+		test_review.disliked_by.append(a)
+		session.refresh(test_review)
+		session.refresh(test_review_details)
+		session.refresh(test_account)
+	test_id = test_review.id
+	account_id = test_account.id
+
+	try:
+		review_ops.like_review(test_review, test_account) #method to test
+	except Exception:
+		assert False
+		
+	#make sure the like has been added and the dislike removed
+	with Session(engine) as session:
+		statement = select(Review).where(Review.id==test_id)
+		results = session.exec(statement)
+		r = results.one()
+		like_list = r.get_liked_by()
+		if len(like_list) != 1:
+			assert False
+		account = like_list[0]
+		if account.username != "test_like_account":
+			assert False
+		dislike_list = r.get_disliked_by()
+		if len(dislike_list) != 0:
+			assert False
+		statement = select(Account).where(Account.id==account_id)
+		results = session.exec(statement)
+		r = results.one()
+		like_list = r.liked_reviews
+		if len(like_list) != 1:
+			assert False
+		review = like_list[0]
+		if review.comment != "testing like_review method":
+			assert False
+		
+	#cleanup
+	with Session(engine) as session:
+		session.delete(uni)
+		session.delete(a)
+		session.delete(c)
+		session.delete(p)
+		session.delete(test_review_details)
+		session.delete(test_review)
+		session.delete(test_account)
+		session.commit()
 
 def test_dislike_review():
 	#setup
@@ -499,9 +544,6 @@ def test_dislike_review():
 		session.delete(test_review)
 		session.delete(test_account)
 		session.commit()
-
-	#end test
-	assert True
 
 def test_remove_like_for_review():
 	#setup
@@ -573,9 +615,6 @@ def test_remove_like_for_review():
 		session.delete(test_account)
 		session.commit()
 
-	#end test
-	assert True
-
 def test_remove_dislike_for_review():
 	#setup
 	#create needed rows in db
@@ -645,9 +684,6 @@ def test_remove_dislike_for_review():
 		session.commit()
 		session.delete(test_account)
 		session.commit()
-
-	#end test
-	assert True
 
 
 '''	

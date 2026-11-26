@@ -68,12 +68,13 @@ class AccountOps:
         account: Account,
         course: Course,
     ) -> None:
-        self._change_relationship(
-            account,
-            Course,
-            course.id,
-            Account.addFavoriteCourse,
-        )
+        account.addFavoriteCourse(course)
+        #self._change_relationship(
+        #    account,
+        #    Course,
+        #    course.id,
+        #    Account.addFavoriteCourse,
+        #)
 
     def removeFavoriteCourseFromAccount(
         self,
@@ -159,7 +160,7 @@ class AccountOps:
             Account.removeReviewCreated,
         )
 
-    def getFavoriteCourses(
+    def getFavoriteCoursesForAccount(
         self,
         account: Account
     ) -> list[Course]:

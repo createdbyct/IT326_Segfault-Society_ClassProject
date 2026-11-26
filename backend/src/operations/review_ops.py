@@ -40,7 +40,7 @@ class ReviewOps():
 		with Session(engine) as session:
 			statement = select(Review).where(Review.id == id)
 			r = session.exec(statement)
-			return r.one()
+			return r.first()
 
 	def get_reviews(self, 
 		course_id: int = None, 

@@ -1,4 +1,5 @@
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import *
+from src.database import engine
 from typing import List, TYPE_CHECKING
 from src.models.university import University
 from src.models.link_tables import FavoriteCourse
@@ -29,7 +30,10 @@ class Course(SQLModel, table=True):
 
     def update_rating(self, f: float) -> float:
         self.rating = f
-        return self.rating
+        with Session(engine) as session:
+            session.add(self)
+            session.commit()
+            return self.rating
 
     def update_details(self, s: str, university: University) -> "Course":
         if s is not None:
