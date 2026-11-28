@@ -6,6 +6,7 @@ from src.models.university import University
 from src.models.review_details import ReviewDetails
 from src.models.review import Review
 from src.models.account import Account
+from src.models.review import Review
 
 # Operations for a Course at a university
 class CourseOps:
